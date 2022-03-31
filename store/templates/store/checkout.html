@@ -1,0 +1,79 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="box-element" id="form-wrapper">
+                <form id="form">
+                    {% csrf_token %}
+                    <div id="user-info">
+                        <div class="form-field">
+                            <input required class="form-control" type="text" id="name" name="name" placeholder="Name..">
+                        </div>
+    
+                        <div class="form-field"> 
+                            <input required class="form-control" type="email" id="email" name="email" placeholder="Email..">
+                        </div>
+                    </div>
+    
+                    <div id="shipping-info">
+                        <hr>
+                        <p>Shipping Information:</p>
+                        <hr>
+                        <div class="form-field">
+                            <input class="form-control" type="text" name="address" placeholder="Address..">
+                        </div>
+                        <div class="form-field">
+                            <input class="form-control" type="text" name="city" placeholder="City..">
+                        </div>
+                        <div class="form-field">
+                            <input class="form-control" type="text" name="state" placeholder="State..">
+                        </div>
+                        <div class="form-field">
+                            <input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
+                        </div>
+                        <div class="form-field">
+                            <input class="form-control" type="text" name="country" placeholder="Country..">
+                        </div>
+                    </div>
+                    <hr>
+                    <input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
+                </form>
+            </div>
+            <br>
+			<div class="box-element hidden" id="payment-info">
+				<small>Paypal Options</small>
+                <br>
+                <button id="make-payment">Make Payment</button>
+			</div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="box-element">
+                <a  class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+				<hr>
+				<h3>Order Summary</h3>
+				<hr>
+                {% for order_product in order_products %}
+                    <div class="cart-row">
+                        <div style="flex:2"><img class="row-image" src="{{order_product.product.imageURL}}"></div>
+                        <div style="flex:2"><p>{{order_product.product.name}}</p></div>
+                        <div style="flex:1"><p>{{order_product.product.price}}</p></div>
+                        <div style="flex:1"><p>x{{order_product.quantity}}</p></div>
+                    </div>
+                {% endfor %}
+				<h5>Items:   {{order.get_total_quantity}}</h5>
+				<h5>Total:   ${{order.get_total_price|floatformat:2}}</h5>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var shipping = '{{order.shipping}}'
+        var quantity = '{{order.get_total_quantity}}'
+        var totalPrice = '{{order.get_total_price|floatformat:2}}'
+        var storeURL = "{% url 'store' %}"
+    </script>
+    <script src="{% static 'js/checkout.js' %}" type="text/javascript"></script>
+{% endblock content %}

@@ -72,10 +72,4 @@ form.addEventListener('submit', function (event) {
     document.getElementById('payment-info').classList.remove("hidden")
 })
 
-button.addEventListener('click', function (event) {
-    event.preventDefault()
-    submitFormData()
-
-
-})
 

@@ -7,7 +7,26 @@ from .models import *
 import json
 from .utils import cartData, cookieCart, guestOrder
 
+# for userCreation
+from django.contrib.auth.forms import UserCreationForm
+from .forms import CreateUserForm
+
 # Create your views here.
+def register(request):
+    form = CreateUserForm()
+
+    if request.method=="POST":
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+    context={'form':form}
+    return render(request, 'store/register.html',context)
+
+def login(request):
+    context={}
+    return render(request, 'store/login.html',context)
+
 def store(request):
     products = Product.objects.all()
     context = {'products':products}
@@ -83,14 +102,8 @@ def process_order(request):
             city= data['shippingInfo']['city'],
             state= data['shippingInfo']['state'],
             zipcode= data['shippingInfo']['zipcode'],
-        )
-        
-
-
-        
-
-
-
-
-        
+        )   
     return JsonResponse('Payment submitted', safe=False)
+
+
+

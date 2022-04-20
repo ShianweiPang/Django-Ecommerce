@@ -12,8 +12,11 @@ from django.contrib.auth.forms import UserCreationForm
 from .forms import CreateUserForm
 from django.contrib import messages
 
+# authenticate user
+from django.contrib.auth import authenticate, login, logout
+
 # Create your views here.
-def register(request):
+def registerUser(request):
     form = CreateUserForm()
 
     if request.method=="POST":
@@ -21,13 +24,25 @@ def register(request):
         if form.is_valid():
             form.save()
             user = form.cleaned_data.get('username')
-            messages.success(request, 'Account was created for '+user)
+            email = form.cleaned_data.get('email')
+
+            Customer.objects.create(username=User.objects.get(username=user), email=email)
             return redirect('login')
 
     context={'form':form}
     return render(request, 'store/register.html',context)
 
-def login(request):
+def loginUser(request):
+    if request.method =="POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('store')
+        else:
+            messages.info(request, 'Incorrect username or password')
     context={}
     return render(request, 'store/login.html',context)
 

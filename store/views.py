@@ -1,5 +1,6 @@
 from ctypes import addressof
 import datetime
+import re
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from numpy import product
@@ -45,6 +46,10 @@ def loginUser(request):
             messages.info(request, 'Incorrect username or password')
     context={}
     return render(request, 'store/login.html',context)
+
+def logoutUser(request):
+    logout(request)
+    return redirect('store')
 
 def store(request):
     products = Product.objects.all()

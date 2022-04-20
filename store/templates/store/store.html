@@ -1,7 +1,7 @@
 {% extends 'store/main.html' %}
 {% load static %}
 {% block content %}
-    <h3>Store</h3>
+    <h3>{{request.user}}</h3>
 
     <div class="row">
         {% for product in products %}
